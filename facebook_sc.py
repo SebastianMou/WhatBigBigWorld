@@ -10,7 +10,7 @@ def facebook_scraper(playwright):
     url_path = f'https://www.facebook.com/public/{name}'
 
     # Launch a new browser instance
-    browser = playwright.chromium.launch(headless=False)
+    browser = playwright.chromium.launch()
     context = browser.new_context()
     page = context.new_page()
 
@@ -71,6 +71,7 @@ def facebook_scraper(playwright):
     content = page.content()
     with open("page_content.html", "w", encoding="utf-8") as f:
         f.write(content)
+    print("Save the entire page content to a file ...")
 
     # Open a new terminal and display the content of the page_content.html file
     # subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', 'cat page_content.html; read -n1'])
@@ -78,7 +79,6 @@ def facebook_scraper(playwright):
     subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', command])
 
     time.sleep(10)
-    print('Done!')
 
     # Close the browser
     browser.close()
@@ -87,6 +87,7 @@ def facebook_scraper(playwright):
     # Load the saved HTML file
     with open("page_content.html", "r", encoding="utf-8") as f:
         content = f.read()
+    print('Load the saved HTML file')
 
     # Parse the HTML using BeautifulSoup
     soup = BeautifulSoup(content, "lxml")
@@ -99,12 +100,13 @@ def facebook_scraper(playwright):
     for account in account_elements:
         name = account.text
         link = account['href']
-        accounts.append({"name": name, "link": link})
-        print(f"Name: {account['name']}")
-        print(f"Link: {account['link']}")
-        print("-" * 50)  # print a separator for clarity
+        
+        # Directly find the image using its classes relative to the account element
+        img_element = account.find_previous("img", class_="_1glk _6phc img")
+        img_url = img_element['src'] if img_element else None
 
-
+        accounts.append({"name": name, "link": link, "image": img_url})
+    
     # Collect names
     account_elements = [account.text for account in account_elements]
 
@@ -116,9 +118,11 @@ def facebook_scraper(playwright):
     # Save data to a JSON file
     with open("names_and_links.json", "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=4)
+    print('Scapeing data to a JSON file ...')
 
     command = 'cat names_and_links.json; sleep 5; exit'
     subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', command])
+    print('Done!')
 
 
 if __name__ == "__main__":

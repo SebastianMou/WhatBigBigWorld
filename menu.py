@@ -3,9 +3,12 @@ from playwright.sync_api import sync_playwright
 import json
 
 def menu():
-    print('╔╦╦╦═╦╗╔═╦═╦══╦═╗╔═╦═╦═╦╦╗╔══╦═╦╗╔╦╦╦╦═╦╦═╗')
-    print('║║║║╦╣╚╣╠╣║║║║║╦╣║╣╣╩║╠╣═╣║║║║╩║╚╝║╔╣║╠╣║║║')
-    print('╚══╩═╩═╩═╩═╩╩╩╩═╝╚═╩╩╩═╩╩╝╚╩╩╩╩╩══╩╝╚╩═╩╩═╝ What a beautiful day for suspicious activity.\n')
+    print(':D')
+    print('/█')
+    print('.Π.')
+    print('█╬╬╬█ █╬█ ███ ███ ╬╬ ██▄ █ ███ ╬╬ ██▄ █ ███ ╬╬ █╬╬╬█ ███ ███ █╬ ██▄')
+    print('█╬█╬█ █▄█ █▄█ ╬█╬ ╬╬ █▄█ █ █╬▄ ╬╬ █▄█ █ █╬▄ ╬╬ █╬█╬█ █╬█ █▄╬ █╬ █╬█')
+    print('█▄█▄█ █╬█ █╬█ ╬█╬ ╬╬ █▄█ █ █▄█ ╬╬ █▄█ █ █▄█ ╬╬ █▄█▄█ █▄█ █╬█ ██ ███ what a beautiful day to do suspicious things :)\n')
 
     print('########################### ~ Menu ~ ##############################')
     print('#    1. Facebook                                                  #')
@@ -16,36 +19,40 @@ def menu():
 
     option = input(str('Enter a scraper: '))
 
-    if option == '1':
-        with sync_playwright() as p:
-            facebook_scraper(p)
-    elif option == '2':
-        print('2')
-    elif option == '3':
-        # Read the JSON data
-        with open("names_and_links.json", "r", encoding="utf-8") as f:
-            data = json.load(f)
-            accounts = data["accounts"]
+    try:
+        if option == '1':
+            with sync_playwright() as p:
+                facebook_scraper(p)
+        elif option == '2':
+            print('2')
+        elif option == '3':
+            # Read the JSON data
+            with open("names_and_links.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+                accounts = data["accounts"]
 
-        # Convert the JSON data to HTML content
-        html_content = "<ul>\n"
-        for account in accounts:
-            name = account['name']
-            link = account['link']
-            html_content += f'  <li><a href="{link}">{name}</a></li>\n'
-        html_content += "</ul>"
+            # Convert the JSON data to HTML content
+            html_content = "<ul>\n"
+            for account in accounts:
+                name = account['name']
+                link = account['link']
+                image = account['image']
+                html_content += f'  <li><img src="{image}"><a href="{link}">{name}</a></li>\n'
+            html_content += "</ul>"
 
-        # Inject the HTML content into search.html
-        # For this example, we'll overwrite the entire content of search.html.
-        # You can modify this part to insert the content at a specific location if needed.
-        with open("search.html", "w", encoding="utf-8") as f:
-            f.write(html_content)
+            # Inject the HTML content into search.html
+            # we'll overwrite the entire content of search.html.
+            with open("search.html", "w", encoding="utf-8") as f:
+                f.write(html_content)
+            print('\n')
+            print('#######################################')
+            print('#  generated html file successfully!  #')
+            print('#######################################')
 
-        print('#######################################')
-        print('#  generated html file successfully!  #')
-        print('#######################################')
+        elif option == '0':
+            exit()
 
-    elif option == '0':
-        exit()
-
+    except:
+        print("An exception occurred")
+    
 menu()

@@ -122,8 +122,9 @@ def facebook_scraper(playwright):
 
     command = 'cat names_and_links.json; sleep 5; exit'
     subprocess.Popen(['gnome-terminal', '--', 'bash', '-c', command])
-    print('Done!')
 
+    ###################################### GOOGLE ######################################
+    
 
 if __name__ == "__main__":
     with sync_playwright() as p:

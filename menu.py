@@ -24,7 +24,8 @@ def menu():
             with sync_playwright() as p:
                 facebook_scraper(p)
         elif option == '2':
-            print('2')
+            print('1')
+
         elif option == '3':
             # Read the JSON data
             with open("names_and_links.json", "r", encoding="utf-8") as f:
@@ -32,13 +33,34 @@ def menu():
                 accounts = data["accounts"]
 
             # Convert the JSON data to HTML content
-            html_content = "<ul>\n"
+            html_content = """
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+            """
+
             for account in accounts:
                 name = account['name']
                 link = account['link']
                 image = account['image']
-                html_content += f'  <li><img src="{image}"><a href="{link}">{name}</a></li>\n'
-            html_content += "</ul>"
+                html_content += f"""
+                    <tr>
+                        <td><img src="{image}" alt="{name}" width="100"></td>
+                        <td>{name}</td>
+                        <td><a href="{link}">Profile Link</a></td>
+                    </tr>
+                """
+
+            html_content += """
+                </tbody>
+            </table>
+            """
 
             # Inject the HTML content into search.html
             # we'll overwrite the entire content of search.html.
@@ -52,7 +74,8 @@ def menu():
         elif option == '0':
             exit()
 
-    except:
-        print("An exception occurred")
+    except Exception as e:
+        print("An exception occurred:", e)
+
     
 menu()
